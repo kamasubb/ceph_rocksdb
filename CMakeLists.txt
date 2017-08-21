@@ -527,6 +527,14 @@ set(SOURCES
         utilities/write_batch_with_index/write_batch_with_index_internal.cc
         $<TARGET_OBJECTS:build_version>)
 
+ifeq (,$(shell $(CXX) -fsyntax-only -maltivec -xc /dev/null 2>&1))
+  list(APPEND SOURCES
+    util/crc32c_ppc_asm.S
+    util/crc32c_ppc.c)
+set(LIB_SOURCES_ASM util/crc32c_ppc_asm.S)
+set(LIB_SOURCES_C util/crc32c_ppc.c)
+endif()
+
 if(WIN32)
   list(APPEND SOURCES
     port/win/io_win.cc
